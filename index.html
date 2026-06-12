@@ -1229,11 +1229,7 @@ document.addEventListener("click", (e) => {
 });
 
 /* CONFIGURATION AT THE TOP */
-const API_BASE =
-    window.location.hostname === "localhost" ||
-    window.location.hostname === "127.0.0.1"
-        ? "http://127.0.0.1:4000"
-        : `http://${window.location.hostname}:4000`;
+const API_BASE = "https://clique-star-studded-api.onrender.com";
 
 const btn = document.getElementById("enterBtn");
 const overlay = document.getElementById("overlay");
@@ -1472,7 +1468,7 @@ btn.addEventListener("click", async () => {
                                 setInterval(() => {
                                     liquidLogo.innerHTML =
                                         dyingArabicHybridText("Clique Star Studded");
-                                }, 90);
+                                streetName }, 90);
 
                                 finalButtons.classList.add("showButtons");
                             }

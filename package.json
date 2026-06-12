@@ -11,14 +11,16 @@
   "author": "",
   "license": "ISC",
   "engines": {
-  "node": "22.x"
-},
+    "node": "22.x"
+  },
   "dependencies": {
     "@prisma/client": "^6.19.0",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0",
     "jsonwebtoken": "^9.0.3",
     "prisma": "^6.19.0"
   },

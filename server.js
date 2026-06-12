@@ -4,11 +4,28 @@ const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 const app = express();
 
-app.use(cors());
+app.use(helmet());
+
+app.use(cors({
+    origin: [
+        "https://cliquestarstudded.com",
+        "https://www.cliquestarstudded.com",
+        "https://cliquestarstudded.vercel.app"
+    ]
+}));
+
 app.use(express.json());
+
+app.use(rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 40,
+    standardHeaders: true,
+    legacyHeaders: false
+}));
 
 const PORT = 4000;
 const JWT_SECRET = "change-this-secret-later";
@@ -107,9 +124,17 @@ app.post("/login", async (req, res) => {
     }
 });
 
-// Updated to include answers and application status
+// Step 4 — Locked /console/users route with Admin Secret check
 app.get("/console/users", async (req, res) => {
     try {
+        const adminSecret = req.headers["x-admin-secret"];
+
+        if (adminSecret !== process.env.ADMIN_SECRET) {
+            return res.status(403).json({
+                message: "Forbidden"
+            });
+        }
+
         const users = await prisma.user.findMany({
             select: {
                 id: true,

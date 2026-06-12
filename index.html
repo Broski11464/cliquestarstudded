@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* 1. Full-screen iPhone video fix applied here */
+html,
+body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:black;
+    font-family:Arial, sans-serif;
+}
+
+/* 1. Full-screen iPhone video fix applied here */
+.wrapper{
+    width:100vw;
+    height:100dvh;
+    display:flex;
+    flex-direction:column;
+}
+
+/* 1. Full-screen iPhone video fix applied here */
+.video-strip{
+    flex:1;
+    height:33.333dvh;
+    overflow:hidden;
+}
+
+video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+
+    filter:blur(55px) brightness(0.15);
+    opacity:0.25;
+
+    transition:
+        filter 5s ease,
+        opacity 5s ease;
+}
+
+.videoReveal video{
+    filter:blur(0px) brightness(1);
+    opacity:1;
+}
+
+@media (min-width:769px){
+    .wrapper{ display:block; }
+    .video-strip{ width:100vw; height:100vh; }
+    .top,.bottom{ display:none; }
+}
+
+#overlay{
+    position:fixed;
+    inset:0;
+    background:black;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+#enterBtn{
+    color:white;
+    background:transparent;
+    border:1px solid white;
+    padding:20px 40px;
+    font-size:14px;
+    letter-spacing:7px;
+    cursor:pointer;
+    opacity:0.85;
+}
+
+/* INTRO */
+
+#introWrapper{
+    position:fixed;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:9998;
+    pointer-events:none;
+    color:white;
+    text-align:center;
+    opacity:0;
+    background:black;
+}
+
+#introTitle{
+    font-family:"Times New Roman", serif;
+    font-size:52px;
+    letter-spacing:5px;
+    font-style:italic;
+    opacity:0;
+    filter:blur(14px);
+}
+
+#introDefinition{
+    margin-top:28px;
+    width:72%;
+    font-family:Arial, sans-serif;
+    letter-spacing:3px;
+    line-height:1.8;
+    opacity:0;
+}
+
+.defPronounce{
+    font-size:13px;
+    margin-bottom:10px;
+    letter-spacing:4px;
+}
+
+.defType{
+    font-size:11px;
+    letter-spacing:5px;
+    opacity:0.7;
+    margin-bottom:22px;
+}
+
+.defBody{
+    font-size:12px;
+    letter-spacing:3px;
+}
+
+.introPlay{
+    opacity:1 !important;
+}
+
+.introPlay #introTitle{
+    animation:titleBlurIn 2.5s ease forwards;
+}
+
+.introPlay #introDefinition{
+    /* Increased duration from 10s to 15s to last 5 seconds longer */
+    animation:definitionShow 15s ease forwards;
+    animation-delay:2.5s;
+}
+
+.introFadeOut #introTitle{
+    animation:titleBlurOut 2.5s ease forwards;
+}
+
+.introDefinitionFadeOut #introDefinition{
+    animation:definitionBlurOut 2.5s ease forwards;
+}
+
+.introFadeOut{
+    animation:introOut 1.5s ease forwards;
+}
+
+@keyframes titleBlurIn{
+    0%{
+        opacity:0;
+        filter:blur(18px);
+        transform:scale(0.96);
+    }
+    100%{
+        opacity:1;
+        filter:blur(0px);
+        transform:scale(1);
+    }
+}
+
+@keyframes definitionShow{
+    0%{ opacity:0; }
+    10%{ opacity:1; }
+    90%{ opacity:1; }
+    100%{ opacity:1; }
+}
+
+@keyframes introOut{
+    0%{ opacity:1; }
+    100%{ opacity:0; }
+}
+
+@keyframes titleBlurOut{
+    0%{
+        opacity:1;
+        filter:blur(0px);
+        transform:scale(1);
+    }
+    100%{
+        opacity:0;
+        filter:blur(18px);
+        transform:scale(0.96);
+    }
+}
+
+@keyframes definitionBlurOut{
+    0%{
+        opacity:1;
+        filter:blur(0px);
+        transform:scale(1);
+    }
+    100%{
+        opacity:0;
+        filter:blur(18px);
+        transform:scale(0.98);
+    }
+}
+
+/* MAIN TEXT */
+
+#glitchTitle,
+.contactTitle,
+.contactLine,
+#enterBtn,
+#quoteText{
+    color:white;
+    font-family:Arial, sans-serif;
+    font-size:14px;
+    font-weight:normal;
+    letter-spacing:7px;
+    opacity:0.85;
+    text-transform:uppercase;
+}
+
+#glitchTitle{
+    position:fixed;
+    top:6%;
+    width:100%;
+    text-align:center;
+    z-index:999;
+    opacity:0;
+}
+
+#middleInfo{
+    position:fixed;
+    top:52%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    z-index:999;
+    text-align:center;
+    opacity:0;
+    width:90%;
+}
+
+.contactTitle{
+    margin-bottom:22px;
+}
+
+.contactLine{
+    margin:14px 0;
+}
+
+.contactLine a{
+    color:white;
+    text-decoration:none;
+}
+
+#quoteText{
+    position:fixed;
+    bottom:7%;
+    left:50%;
+    transform:translateX(-50%);
+    width:85%;
+    text-align:center;
+    z-index:999;
+    opacity:0;
+    line-height:1.8;
+    font-size:12px;
+    letter-spacing:5px;
+}
+
+@media (max-width:768px){
+    #glitchTitle{ display:none; }
+
+    #middleInfo{ top:50%; }
+
+    #introTitle{
+        font-size:34px;
+        letter-spacing:3px;
+    }
+
+    #introDefinition{
+        width:88%;
+    }
+
+    .defBody{
+        font-size:10px;
+        letter-spacing:2px;
+    }
+
+    .contactTitle,
+    .contactLine{
+        font-size:12px;
+        letter-spacing:4px;
+    }
+
+    #quoteText{
+        bottom:7%;
+        font-size:9px;
+        letter-spacing:3px;
+        line-height:1.7;
+        width:92%;
+    }
+}
+
+/* 2. Fix Clique Star Studded position on all iPhones applied here */
+.liquidLogo{
+    position:fixed;
+    top:50dvh;
+    left:50vw;
+    width:90vw;
+    text-align:center;
+    transform:translate(-50%,-50%);
+    z-index:999;
+    color:white;
+    font-family:"Times New Roman", serif;
+    font-size:46px;
+    letter-spacing:5px;
+    font-style:italic;
+    opacity:0;
+    pointer-events:none;
+
+    text-shadow:
+        0 0 12px white,
+        0 0 35px rgba(255,255,255,0.9);
+
+    filter:blur(3px) contrast(1.4);
+    transition:none;
+}
+
+.logoMove{
+    animation:liquidMove 14s ease forwards;
+}
+
+@keyframes liquidMove{
+    0%{
+        opacity:0;
+        top:50dvh;
+        filter:blur(10px);
+        transform:translate(-50%,-50%) scale(0.95);
+    }
+
+    15%{
+        opacity:1;
+        filter:blur(1px);
+        transform:translate(-50%,-50%) scale(1.08);
+    }
+
+    35%{
+        opacity:1;
+        top:50dvh;
+        filter:blur(0px);
+        transform:translate(-50%,-50%) scale(1);
+    }
+
+    100%{
+        opacity:1;
+        top:50dvh;
+        filter:blur(0px);
+        transform:translate(-50%,-50%) scale(1);
+    }
+}
+
+.logoWord{
+    display:inline;
+}
+
+.logoStacked .logoWord{
+    display:block;
+    line-height:1.05;
+}
+
+.mainTextOut{
+    opacity:0 !important;
+    filter:blur(16px);
+    transition:opacity 2s ease, filter 2s ease;
+}
+
+.wrapper{
+    opacity:0;
+    filter:blur(55px) brightness(0.15);
+    transition:opacity 5s ease, filter 5s ease;
+}
+
+.wrapper.videoReveal{
+    opacity:1;
+    filter:blur(0px) brightness(1);
+}
+
+/* FAST AESTHETIC FLASH WORDS */
+
+#flashWords{
+    position:fixed;
+    inset:0;
+    z-index:998;
+    pointer-events:none;
+    overflow:hidden;
+}
+
+.flashWord{
+    position:absolute;
+
+    color:white;
+
+    font-family:Arial, sans-serif;
+
+    text-transform:uppercase;
+
+    letter-spacing:8px;
+
+    opacity:0;
+
+    filter:blur(2px);
+
+    animation:flashWord 0.18s linear forwards;
+
+    text-shadow:
+        0 0 8px rgba(255,255,255,0.4);
+
+    white-space:nowrap;
+}
+
+@keyframes flashWord{
+
+    0%{
+        opacity:0;
+        transform:scale(0.94);
+        filter:blur(6px);
+    }
+
+    15%{
+        opacity:0.35;
+        filter:blur(0px);
+    }
+
+    100%{
+        opacity:0;
+        transform:scale(1.04);
+        filter:blur(3px);
+    }
+}
+
+.finalButtons{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%) scale(0.92);
+    z-index:1000;
+
+    display:flex;
+    gap:18px;
+
+    opacity:0;
+    filter:blur(18px);
+    pointer-events:none;
+
+    transition:
+        opacity 2s ease,
+        filter 2s ease,
+        transform 2s ease;
+}
+
+.finalButtons.showButtons{
+    opacity:1;
+    filter:blur(0px);
+    transform:translate(-50%,-50%) scale(1);
+    pointer-events:auto;
+}
+
+.finalButton{
+    width:170px;
+    height:52px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    box-sizing:border-box;
+    color:white;
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.85);
+    font-family:Arial,sans-serif;
+    font-size:12px;
+    letter-spacing:6px;
+    text-transform:uppercase;
+    text-decoration:none;
+    opacity:0.85;
+}
+
+.finalButton:active{
+    background:white;
+    color:black;
+}
+
+.logoDisappear{
+    animation:logoDissolve 6s ease forwards;
+}
+
+@keyframes logoDissolve{
+
+    0%{
+        opacity:1;
+        filter:blur(0px);
+        transform:translate(-50%,-50%) scale(1);
+    }
+
+    25%{
+        opacity:0.9;
+        filter:blur(2px);
+        transform:translate(-50%,-50%) scale(1.02);
+    }
+
+    50%{
+        opacity:0.65;
+        filter:blur(6px);
+        transform:translate(-50%,-50%) scale(1.05);
+    }
+
+    75%{
+        opacity:0.3;
+        filter:blur(14px);
+        transform:translate(-50%,-50%) scale(1.1);
+    }
+
+    100%{
+        opacity:0;
+        filter:blur(26px);
+        transform:translate(-50%,-50%) scale(1.18);
+    }
+}
+
+@media (max-width:768px){
+    .finalButtons{
+        gap:12px;
+    }
+}
+
+#aboutPage{
+    position:fixed;
+    inset:0;
+    background:black;
+    z-index:20000;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    opacity:0;
+    pointer-events:none;
+
+    transition:
+        opacity 1.8s ease,
+        backdrop-filter 1.8s ease;
+
+    backdrop-filter:blur(0px);
+}
+
+#aboutPage.showAbout{
+    opacity:1;
+    pointer-events:auto;
+    backdrop-filter:blur(20px);
+}
+
+#aboutText{
+    width:78%;
+    max-width:900px;
+
+    color:white;
+    font-family:Arial, sans-serif;
+    font-size:14px;
+    letter-spacing:5px;
+    line-height:2.2;
+    text-align:center;
+
+    opacity:0;
+    filter:blur(18px);
+    transform:scale(0.96);
+
+    transition:
+        opacity 2s ease,
+        filter 2s ease,
+        transform 2s ease;
+}
+
+#aboutPage.showAbout #aboutText{
+    opacity:0.88;
+    filter:blur(0px);
+    transform:scale(1);
+}
+
+#backBtn{
+    position:fixed;
+    bottom:7%;
+    left:50%;
+    transform:translateX(-50%);
+
+    color:white;
+    background:transparent;
+    border:1px solid white;
+
+    padding:14px 26px;
+
+    font-size:11px;
+    letter-spacing:6px;
+    text-transform:uppercase;
+
+    cursor:pointer;
+    opacity:0.75;
+}
+
+#backBtn:hover{
+    background:white;
+    color:black;
+}
+
+.videoDim{
+    filter:blur(24px) brightness(0.2) !important;
+    transition:filter 1.8s ease !important;
+}
+
+@media (max-width:768px){
+    #aboutText{
+        width:84%;
+        font-size:10px;
+        letter-spacing:3px;
+        line-height:2;
+    }
+
+    #backBtn{
+        font-size:10px;
+        letter-spacing:4px;
+        padding:12px 22px;
+    }
+}
+
+#loginPage{
+    position:fixed;
+    inset:0;
+    background:black;
+    z-index:30000;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+
+    opacity:0;
+    pointer-events:none;
+
+    transition:
+        opacity 2.4s ease,
+        filter 2.4s ease;
+
+    filter:blur(18px);
+}
+
+#loginPage.showLogin{
+    opacity:1;
+    pointer-events:auto;
+    filter:blur(0px);
+}
+
+#loginPage.hideLoginSmooth{
+    opacity:0;
+    filter:blur(26px);
+    transform:scale(1.04);
+    pointer-events:none;
+}
+
+.loginBox{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    width:320px;
+    max-width:82%;
+}
+
+/* 6. Make email/password deathly aesthetic applied here */
+.loginInput{
+    background:rgba(0,0,0,0.18);
+    border:1px solid rgba(255,255,255,0.55);
+
+    padding:18px;
+
+    color:white;
+
+    font-family:"Times New Roman", serif;
+    font-size:16px;
+    font-style:italic;
+    letter-spacing:6px;
+    font-weight:normal;
+
+    outline:none;
+
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+
+    box-shadow:
+        inset 0 0 18px rgba(255,255,255,0.04),
+        0 0 18px rgba(255,255,255,0.04);
+
+    text-align:center;
+}
+
+/* 2. Slowed breathing animation loop applied directly here */
+.loginInput::placeholder{
+    color:rgba(255,255,255,0.7);
+    font-family:"Times New Roman", serif;
+    font-style:italic;
+    letter-spacing:6px;
+    animation:placeholderBreath 8s infinite;
+}
+
+@keyframes placeholderBreath{
+    0%{
+        opacity:0;
+        filter:blur(6px);
+    }
+
+    18%{
+        opacity:0.75;
+        filter:blur(0px);
+    }
+
+    38%{
+        opacity:0.75;
+        filter:blur(0px);
+    }
+
+    55%{
+        opacity:0;
+        filter:blur(6px);
+    }
+
+    100%{
+        opacity:0;
+        filter:blur(6px);
+    }
+}
+
+.loginSubmit{
+    background:transparent;
+    border:1px solid white;
+
+    color:white;
+
+    padding:18px;
+
+    font-family:Arial, sans-serif;
+    font-size:11px;
+    letter-spacing:6px;
+    text-transform:uppercase;
+
+    cursor:pointer;
+}
+
+.loginSubmit:hover{
+    background:white;
+    color:black;
+}
+
+#loginBack{
+    margin-top:30px;
+
+    background:transparent;
+    border:none;
+
+    color:white;
+
+    font-size:10px;
+    letter-spacing:5px;
+    opacity:0.6;
+
+    cursor:pointer;
+}
+
+@media (max-width:768px){
+
+    .loginInput{
+        font-size:16px;
+        letter-spacing:4px;
+    }
+
+    .loginSubmit{
+        font-size:10px;
+        letter-spacing:4px;
+    }
+
+    .finalButton{
+        width:140px;
+        height:48px;
+        font-size:10px;
+        letter-spacing:4px;
+    }
+
+}
+
+#applicationPage,
+#finalBlackPage{
+    position:fixed;
+    inset:0;
+    background:black;
+    z-index:40000;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    opacity:0;
+    pointer-events:none;
+
+    filter:blur(18px);
+    transform:scale(0.97);
+
+    transition:
+        opacity 1.8s ease,
+        filter 1.8s ease;
+}
+
+#applicationPage.showApplication,
+#finalBlackPage.showFinal{
+    opacity:1;
+    pointer-events:auto;
+    filter:blur(0px);
+    transform:scale(1);
+}
+
+#applicationContent{
+    width:82%;
+    max-width:600px;
+    text-align:center;
+    color:white;
+    font-family:Arial, sans-serif;
+    text-transform:uppercase;
+    letter-spacing:6px;
+    transition: opacity 2.4s ease, filter 2.4s ease, transform 2.4s ease;
+}
+
+.phaseText{
+    font-size:13px;
+    opacity:0.7;
+    margin-bottom:12px;
+}
+
+.recognitionText{
+    font-size:22px;
+    margin-bottom:24px;
+}
+
+.belongText{
+    font-size:12px;
+    opacity:0.65;
+    margin-bottom:46px;
+}
+
+.questionText{
+    font-size:12px;
+    line-height:2;
+    margin-bottom:22px;
+}
+
+/* 1. Fix zoom on "WRITE HERE" form field element properties */
+#applicationAnswer{
+    width:100%;
+    height:130px;
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.7);
+    color:white;
+    padding:18px;
+    font-family:"Times New Roman", serif;
+    font-style:italic;
+    font-size:16px;
+    letter-spacing:3px;
+    outline:none;
+    resize:none;
+    box-sizing:border-box;
+}
+
+#applicationAnswer::placeholder{
+    color:rgba(255,255,255,0.42);
+    font-family:"Times New Roman", serif;
+    font-style:italic;
+    letter-spacing:6px;
+    animation:placeholderBreath 8s infinite;
+}
+
+#submitApplication{
+    margin-top:22px;
+    background:transparent;
+    border:1px solid white;
+    color:white;
+    padding:16px 32px;
+    font-size:11px;
+    letter-spacing:6px;
+    cursor:pointer;
+}
+
+#finalMessage{
+    color:white;
+    font-family:Arial, sans-serif;
+    font-size:13px;
+    letter-spacing:6px;
+    text-align:center;
+    text-transform:uppercase;
+    width:80%;
+}
+
+.videoSoftBlur{
+
+    filter:blur(38px) brightness(0.18) !important;
+
+    transition:
+        filter 2.8s ease,
+        opacity 2.8s ease !important;
+
+}
+
+.blackBehind{
+    background:black !important;
+}
+
+#blackTransition{
+    position:fixed;
+    inset:0;
+    background:black;
+    z-index:39000;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 1.2s ease;
+}
+
+#blackTransition.showBlack{
+    opacity:1;
+}
+
+.letterDeath{
+    animation:
+        logoDissolve 6s ease forwards,
+        dyingLetters 0.12s infinite;
+}
+
+@keyframes dyingLetters{
+    0%{
+        opacity:0.95;
+        letter-spacing:6px;
+        filter:blur(0px);
+    }
+
+    25%{
+        opacity:0.65;
+        letter-spacing:9px;
+        filter:blur(2px);
+    }
+
+    50%{
+        opacity:0.35;
+        letter-spacing:13px;
+        filter:blur(5px);
+    }
+
+    75%{
+        opacity:0.75;
+        letter-spacing:5px;
+        filter:blur(1px);
+    }
+
+    100%{
+        opacity:0.18;
+        letter-spacing:16px;
+        filter:blur(8px);
+    }
+}
+
+.glitchBirth{
+    text-shadow:
+        0 0 12px white,
+        0 0 35px rgba(255,255,255,0.8);
+}
+
+.logoClean{
+    text-shadow:
+        0 0 10px white,
+        0 0 28px rgba(255,255,255,0.9),
+        0 0 55px rgba(255,255,255,0.7);
+}
+
+.logoRitual{
+    animation:none;
+}
+
+@keyframes logoRitual{
+    0%{
+        opacity:0;
+        filter:blur(18px);
+        text-shadow:none;
+    }
+
+    20%{
+        opacity:1;
+        filter:blur(8px);
+    }
+
+    45%{
+        opacity:1;
+        filter:blur(0px);
+        text-shadow:
+            0 0 12px white,
+            0 0 35px white,
+            0 0 70px white;
+    }
+
+    60%{
+        text-shadow:
+            0 0 25px white,
+            0 0 70px white,
+            0 0 120px white;
+    }
+
+    75%{
+        text-shadow:
+            0 0 8px white,
+            0 0 28px white,
+            0 0 60px white;
+    }
+
+    90%{
+        text-shadow:
+            0 0 28px white,
+            0 0 85px white,
+            0 0 140px white;
+    }
+
+    100%{
+        opacity:1;
+        filter:blur(0px);
+        text-shadow:
+            0 0 12px white,
+            0 0 35px white;
+    }
+}
+
+.cleanLogo{
+    position:fixed;
+    top:50dvh;
+    left:50vw;
+    width:90vw;
+    text-align:center;
+    transform:translate(-50%,-50%);
+    z-index:101;
+
+    color:white;
+    font-family:"Times New Roman", serif;
+    font-size:46px;
+    letter-spacing:5px;
+    font-style:italic;
+
+    opacity:0;
+    pointer-events:none;
+
+    text-shadow:
+        0 0 12px white,
+        0 0 35px white,
+        0 0 70px white;
+
+    transition:none;
+}
+</style>
+</head>
+
+<body>
+
+<div id="overlay">
+    <button id="enterBtn">ENTER</button>
+</div>
+
+<div id="introWrapper">
+    <div id="introTitle">Clique Star Studded</div>
+
+    <div id="introDefinition">
+        <div class="defPronounce">/klēk stär-ˌstə-dəd/</div>
+        <div class="defType">adjective phrase</div>
+
+        <div class="defBody">
+            A tightly knit and exclusive inner circle composed primarily of powerful, wealthy, talented, and highly influential individuals.
+            <br><br>
+            The phrase implies prestige, ambition, social dominance, and access to influence, with members typically recognized for exceptional success, reputation, skill, beauty, or public presence.
+        </div>
+    </div>
+</div>
+
+<div id="glitchTitle">
+    KAREEMS SAFE HAVEN
+</div>
+
+<div id="middleInfo">
+    <div class="contactTitle">MY CONTACTS</div>
+    <div class="contactLine">karimaymandxb@gmail.com</div>
+    <div class="contactLine">+971508214338</div>
+    <div class="contactLine">
+        <a href="https://instagram.com/herprettyeyebloodvessel" target="_blank">
+            @herprettyeyebloodvessel
+        </a>
+    </div>
+</div>
+
+<div id="quoteText">
+    
+</div>
+
+<div id="liquidLogo" class="liquidLogo">
+    <span class="logoWord">Clique</span>
+    <span class="logoWord">Star</span>
+    <span class="logoWord">Studded</span>
+</div>
+
+<div id="cleanLogo" class="cleanLogo">
+    Clique Star Studded
+</div>
+
+<div id="finalButtons" class="finalButtons">
+    <a href="#" id="openLoginBtn" class="finalButton">JOIN</a>
+    <a href="#" id="aboutBtn" class="finalButton">ABOUT</a>
+</div>
+
+<div id="flashWords"></div>
+<div class="wrapper" id="videoWrapper">
+
+<div class="video-strip top">
+<video id="topVideo" muted loop playsinline preload="auto">
+<source src="pc-video.mp4" type="video/mp4">
+</video>
+</div>
+
+<div class="video-strip middle">
+<video id="mainVideo" loop playsinline preload="auto">
+<source src="pc-video.mp4" type="video/mp4">
+</video>
+</div>
+
+<div class="video-strip bottom">
+<video id="bottomVideo" muted loop playsinline preload="auto">
+<source src="pc-video.mp4" type="video/mp4">
+</video>
+</div>
+
+</div>
+
+<div id="aboutPage">
+    <div id="aboutText">
+        A societal attempt appealing to those who manifest self-mastery, higher order manipulation, wealth & public presence. belong.
+    </div>
+
+    <button id="backBtn">BACK</button>
+</div>
+
+<div id="loginPage">
+
+    <div class="loginBox">
+
+        <input
+            type=""
+            id="emailInput"
+            class="loginInput"
+            placeholder="EMAIL"
+        >
+
+        <input
+            type="password"
+            id="passwordInput"
+            class="loginInput"
+            placeholder="PASSWORD"
+        >
+
+        <button type="button" id="signupBtn" class="loginSubmit">
+            SIGN UP
+        </button>
+
+        <button type="button" id="loginBtn" class="loginSubmit" style="display:none;">
+            LOG IN
+        </button>
+
+    </div>
+
+    <button id="loginBack">
+        BACK
+    </button>
+
+</div>
+
+<div id="applicationPage">
+    <div id="applicationContent">
+        <div class="phaseText">PHASE ONE</div>
+        <div class="recognitionText">RECOGNITION</div>
+        <div class="belongText">BELONG</div>
+
+        <div class="questionText">
+            WHY SHOULD YOU BE ACCEPTED INTO THIS GROUP?
+        </div>
+
+        <textarea id="applicationAnswer" placeholder="WRITE HERE"></textarea>
+
+        <button type="button" id="submitApplication">
+            SUBMIT
+        </button>
+    </div>
+</div>
+
+<div id="finalBlackPage">
+    <div id="finalMessage">
+         we'll be in touch
+    </div>
+</div>
+
+<div id="blackTransition"></div>
+
+<script>
+document.addEventListener("submit", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+});
+
+document.addEventListener("click", (e) => {
+    if (
+        e.target.id === "signupBtn" ||
+        e.target.id === "loginBtn" ||
+        e.target.id === "submitApplication"
+    ) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+});
+
+/* CONFIGURATION AT THE TOP */
+const API_BASE =
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1"
+        ? "http://127.0.0.1:4000"
+        : `http://${window.location.hostname}:4000`;
+
+const btn = document.getElementById("enterBtn");
+const overlay = document.getElementById("overlay");
+
+const topVideo = document.getElementById("topVideo");
+const mainVideo = document.getElementById("mainVideo");
+const bottomVideo = document.getElementById("bottomVideo");
+
+const introWrapper = document.getElementById("introWrapper");
+const glitchTitle = document.getElementById("glitchTitle");
+const middleInfo = document.getElementById("middleInfo");
+const quoteText = document.getElementById("quoteText");
+const videoWrapper = document.getElementById("videoWrapper");
+const liquidLogo = document.getElementById("liquidLogo");
+const cleanLogo = document.getElementById("cleanLogo");
+const finalButtons = document.getElementById("finalButtons");
+const blackTransition = document.getElementById("blackTransition");
+
+const arabicMap = {
+    "C": "ك",
+    "L": "ل",
+    "I": "ي",
+    "Q": "ق",
+    "U": "و",
+    "E": "ع",
+    "S": "س",
+    "T": "ت",
+    "A": "ا",
+    "R": "ر",
+    "D": "د"
+};
+
+function arabicHybridText(text){
+    return text.split("").map(char => {
+        const upper = char.toUpperCase();
+
+        if(arabicMap[upper] && Math.random() > 0.5){
+            return arabicMap[upper];
+        }
+
+        return char;
+    }).join("");
+}
+
+function dyingArabicHybridText(text){
+
+    return text.split("").map(char => {
+
+        const upper = char.toUpperCase();
+
+        if(char === " "){
+            return " ";
+        }
+
+        if(Math.random() < 0.18){
+            return `<span style="opacity:0;">${char}</span>`;
+        }
+
+        if(arabicMap[upper] && Math.random() > 0.45){
+            return arabicMap[upper];
+        }
+
+        if(Math.random() < 0.2){
+            return `<span style="opacity:0.35; filter:blur(2px);">${char}</span>`;
+        }
+
+        return char;
+
+    }).join("");
+
+}
+
+const flashWords = document.getElementById("flashWords");
+
+/* 5. Smoothly lower music function added here */
+function fadeVolume(targetVolume){
+    const fade = setInterval(() => {
+        if(mainVideo.volume > targetVolume){
+            mainVideo.volume -= 0.02;
+        }
+
+        if(mainVideo.volume <= targetVolume){
+            mainVideo.volume = targetVolume;
+            clearInterval(fade);
+        }
+    }, 80);
+}
+
+function fadeMusicOut(){
+    let volume = mainVideo.volume;
+
+    const fade = setInterval(() => {
+        volume -= 0.005;
+
+        if(volume <= 0){
+            volume = 0;
+            clearInterval(fade);
+        }
+
+        mainVideo.volume = volume;
+    }, 120);
+}
+
+/* DEVELOPMENT MODE SHORT-CIRCUIT BLOCK */
+btn.addEventListener("click", async () => {
+    if(false){
+        overlay.style.display = "none";
+        introWrapper.style.display = "none";
+        glitchTitle.style.display = "none";
+        middleInfo.style.display = "none";
+        quoteText.style.display = "none";
+        liquidLogo.style.opacity = "1";
+        finalButtons.classList.add("showButtons");
+        return;
+    }
+
+    overlay.style.display = "none";
+
+    introWrapper.classList.add("introPlay");
+    
+    mainVideo.muted = true;
+    topVideo.muted = true;
+    bottomVideo.muted = true;
+
+    mainVideo.play();
+    topVideo.play();
+    bottomVideo.play();
+
+    mainVideo.pause();
+    topVideo.pause();
+    bottomVideo.pause();
+
+    mainVideo.currentTime = 0;
+    topVideo.currentTime = 0;
+    bottomVideo.currentTime = 0;
+    
+    // Shifted out 5 seconds (12500 -> 17500)
+    setTimeout(() => {
+        introWrapper.classList.add("introFadeOut");
+    }, 17500);
+
+    // Shifted out 5 seconds (15000 -> 20000)
+    setTimeout(() => {
+        introWrapper.classList.add("introDefinitionFadeOut");
+    }, 20000);
+
+    // Shifted out 5 seconds (14000 -> 19000)
+    setTimeout(() => {
+        introWrapper.style.display = "none";
+
+        glitchTitle.style.transition = "3s";
+        middleInfo.style.transition = "3s";
+        quoteText.style.transition = "3s";
+
+        glitchTitle.style.opacity = "1";
+        middleInfo.style.opacity = "1";
+        quoteText.style.opacity = "1";
+
+        setTimeout(() => {
+            glitchTitle.classList.add("mainTextOut");
+            middleInfo.classList.add("mainTextOut");
+            quoteText.classList.add("mainTextOut");
+        }, 10000);
+
+        setTimeout(() => {
+            let ritualPhase = "chaos";
+            liquidLogo.classList.add("logoRitual");
+            
+            setTimeout(() => {
+
+                let fontIndex = 0;
+                let logoMode = "chaos";
+
+                /* Replaced the fontSwap block with pure static snap assignment rules */
+                liquidLogo.innerHTML = "Clique Star Studded";
+                liquidLogo.style.opacity = "1";
+                liquidLogo.style.filter = "blur(0px)";
+                liquidLogo.style.animation = "none";
+                liquidLogo.style.transition = "none";
+                liquidLogo.style.fontFamily = '"Times New Roman", serif';
+
+                setTimeout(() => {
+                    ritualPhase = "formed";
+
+                    liquidLogo.innerHTML = "Clique Star Studded";
+
+                    liquidLogo.style.opacity = "1";
+                    liquidLogo.style.filter = "blur(0px)";
+                    liquidLogo.style.animation = "none";
+                    liquidLogo.style.transition = "none";
+
+                }, 1800);
+
+                /* Deleted the old 2300ms layout wipe interval block from this position */
+
+                // 2. Removed simultaneous 5s logo-blur fade out logic directly before video reveal
+                setTimeout(() => {
+                    setTimeout(() => {
+                        liquidLogo.style.opacity = "0";
+                    }, 4000);
+                    videoWrapper.classList.add("videoReveal");
+                }, 4200);
+
+                // 3. Arabic Flash Glitch sequence integration point
+                setTimeout(() => {
+
+                    liquidLogo.style.transition = "none";
+                    liquidLogo.style.opacity = "0";
+
+                    setTimeout(() => {
+
+                        let arabicFlashCount = 0;
+
+                        const arabicFlash = setInterval(() => {
+
+                            arabicFlashCount++;
+
+                            if(arabicFlashCount % 2 === 0){
+                                liquidLogo.innerHTML = "الفتيات المتمردات";
+                                liquidLogo.style.opacity = "1";
+                                liquidLogo.style.filter = "blur(18px)";
+                                liquidLogo.style.textShadow =
+                                    "0 0 25px white, 0 0 80px white, 0 0 150px white";
+                            }else{
+                                liquidLogo.style.opacity = "0";
+                            }
+
+                            if(arabicFlashCount >= 56){
+                                clearInterval(arabicFlash);
+
+                                liquidLogo.style.opacity = "0.14";
+                                liquidLogo.style.filter = "blur(28px)";
+                                liquidLogo.style.textShadow =
+                                    "0 0 35px white, 0 0 120px white, 0 0 220px white";
+
+                                setInterval(() => {
+                                    liquidLogo.innerHTML =
+                                        dyingArabicHybridText("Clique Star Studded");
+                                }, 90);
+
+                                finalButtons.classList.add("showButtons");
+                            }
+
+                        }, 100);
+
+                    }, 100);
+
+                }, 6000);
+
+            }, 4000);
+
+            mainVideo.currentTime = 0;
+            topVideo.currentTime = 0;
+            bottomVideo.currentTime = 0;
+
+            mainVideo.muted = false;
+            mainVideo.volume = 0;
+
+            topVideo.muted = true;
+            bottomVideo.muted = true;
+
+            mainVideo.play();
+            topVideo.play();
+            bottomVideo.play();
+
+            setTimeout(() => {
+
+                createFlashWord();
+
+                setInterval(() => {
+                    createFlashWord();
+                }, 90);
+
+            }, 500);
+
+        }, 12000);
+
+    }, 19000);
+});
+
+const aestheticWords = [
+
+    "CLIQUE",
+    "STAR",
+    "CLIQUE",
+    "STUDDED",
+    "STAR",
+    "STUDDED",
+    "CLIQUE",
+    "CLIQUE",
+    "STAR",
+    "STUDDED",
+    "STAR",
+    "CLIQUE",
+    "STUDDED",
+    "STAR",
+    "CLIQUE"
+
+];
+
+function createFlashWord(){
+
+    const word = document.createElement("div");
+
+    word.className = "flashWord";
+
+    word.innerText =
+        aestheticWords[
+            Math.floor(Math.random() * aestheticWords.length)
+        ];
+
+    word.style.left =
+        Math.random() * 100 + "vw";
+
+    word.style.top =
+        Math.random() * 100 + "vh";
+
+    word.style.fontSize =
+        (10 + Math.random() * 18) + "px";
+
+    flashWords.appendChild(word);
+
+    setTimeout(() => {
+        word.remove();
+    }, 180);
+}
+
+const aboutBtn = document.getElementById("aboutBtn");
+const aboutPage = document.getElementById("aboutPage");
+const backBtn = document.getElementById("backBtn");
+
+aboutBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    /* 5. Smoothly lower music to 50% on ABOUT */
+    fadeVolume(0.5);
+
+    videoWrapper.classList.add("videoSoftBlur");
+
+    setTimeout(() => {
+        aboutPage.classList.add("showAbout");
+    }, 350);
+});
+
+backBtn.addEventListener("click", () => {
+    aboutPage.classList.remove("showAbout");
+
+    setTimeout(() => {
+        videoWrapper.classList.remove("videoSoftBlur");
+    }, 900);
+});
+
+const openLoginBtn =
+    document.getElementById("openLoginBtn");
+
+const loginPage =
+    document.getElementById("loginPage");
+
+const loginBack =
+    document.getElementById("loginBack");
+
+const emailInput =
+    document.getElementById("emailInput");
+
+const passwordInput =
+    document.getElementById("passwordInput");
+
+const signupBtn =
+    document.getElementById("signupBtn");
+
+const loginBtn =
+    document.getElementById("loginBtn");
+
+/* OPEN LOGIN */
+
+openLoginBtn.addEventListener("click", (e) => {
+
+    e.preventDefault();
+
+    /* 5. Smoothly lower music to 50% on JOIN click */
+    fadeVolume(0.5);
+
+    videoWrapper.classList.add("videoSoftBlur");
+    loginPage.classList.add("showLogin");
+
+});
+
+/* CLOSE LOGIN */
+
+loginBack.addEventListener("click", () => {
+
+    loginPage.classList.remove("showLogin");
+    videoWrapper.classList.remove("videoSoftBlur");
+
+});
+
+let currentAuthEmail = null;
+
+const applicationPage = document.getElementById("applicationPage");
+const finalBlackPage = document.getElementById("finalBlackPage");
+const applicationAnswer = document.getElementById("applicationAnswer");
+const submitApplication = document.getElementById("submitApplication");
+
+/* NEW SIGNUP BLOCK */
+signupBtn.onclick = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    try {
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        if(!email || !password){
+            alert("Enter email and password.");
+            return;
+        }
+
+        const res = await fetch(`${API_BASE}/signup`, {
+            method:"POST",
+            headers:{ "Content-Type":"application/json" },
+            body:JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if(res.ok){
+            currentAuthEmail = email;
+            alert("Sign up complete.");
+
+            fadeMusicOut();
+
+            /* 3. Hide JOIN / ABOUT during black transition after sign up */
+            finalButtons.style.opacity = "0";
+            finalButtons.style.pointerEvents = "none";
+
+            blackTransition.classList.add("showBlack");
+
+            loginPage.classList.remove("showLogin");
+
+            setTimeout(() => {
+                applicationPage.classList.add("showApplication");
+            }, 1700);
+
+            setTimeout(() => {
+                blackTransition.classList.remove("showBlack");
+            }, 2900);
+            return;
+        }
+
+        alert(data.message);
+
+    } catch (err) {
+        console.log(err);
+        alert("Signup failed. Backend is not reachable.");
+    }
+};
+
+/* NEW LOGIN BLOCK (retrained original to align with loginBtn references) */
+loginBtn.onclick = async (e) => {
+    e.preventDefault(); 
+    try {
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        if(!email || !password){
+            alert("Enter email and password.");
+            return;
+        }
+
+        const res = await fetch(`${API_BASE}/login`, {
+            method:"POST",
+            headers:{ "Content-Type":"application/json" },
+            body:JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if(data.token){
+            localStorage.setItem("token", data.token);
+            currentAuthEmail = email;
+            loginPage.classList.remove("showLogin");
+            applicationPage.classList.add("showApplication");
+        }else{
+            alert(data.message);
+        }
+
+    } catch (err) {
+        alert("Login error. Backend may not be running.");
+        console.log(err);
+    }
+};
+
+/* NEW SUBMIT APPLICATION BLOCK */
+submitApplication.onclick = async (e) => {
+    e.preventDefault();
+
+    const answer = applicationAnswer.value.trim();
+
+    if(!answer){
+        alert("Write your answer first.");
+        return;
+    }
+
+    const res = await fetch(`${API_BASE}/apply`, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({
+            email: currentAuthEmail,
+            answer: answer
+        })
+    });
+
+    const data = await res.json();
+
+    if(res.ok){
+        blackTransition.classList.add("showBlack");
+
+        applicationPage.classList.remove("showApplication");
+
+        setTimeout(() => {
+            finalBlackPage.classList.add("showFinal");
+        }, 1700);
+
+        setTimeout(() => {
+            blackTransition.classList.remove("showBlack");
+        }, 2900);
+        return;
+    }
+
+    alert(data.message);
+};
+</script>
+
+</body>
+</html>

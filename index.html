@@ -1141,6 +1141,10 @@ video{
 </video>
 </div>
 
+<audio id="siteAudio" preload="auto">
+    <source src="pc-video.mp4" type="audio/mp4">
+</audio>
+
 </div>
 
 <div id="aboutPage">
@@ -1237,6 +1241,7 @@ const overlay = document.getElementById("overlay");
 const topVideo = document.getElementById("topVideo");
 const mainVideo = document.getElementById("mainVideo");
 const bottomVideo = document.getElementById("bottomVideo");
+const siteAudio = document.getElementById("siteAudio");
 
 const introWrapper = document.getElementById("introWrapper");
 const glitchTitle = document.getElementById("glitchTitle");
@@ -1304,22 +1309,22 @@ function dyingArabicHybridText(text){
 
 const flashWords = document.getElementById("flashWords");
 
-/* 5. Smoothly lower music function added here */
+/* Smoothly lower music functions assigned to independent audio node */
 function fadeVolume(targetVolume){
     const fade = setInterval(() => {
-        if(mainVideo.volume > targetVolume){
-            mainVideo.volume -= 0.02;
+        if(siteAudio.volume > targetVolume){
+            siteAudio.volume -= 0.02;
         }
 
-        if(mainVideo.volume <= targetVolume){
-            mainVideo.volume = targetVolume;
+        if(siteAudio.volume <= targetVolume){
+            siteAudio.volume = targetVolume;
             clearInterval(fade);
         }
     }, 80);
 }
 
 function fadeMusicOut(){
-    let volume = mainVideo.volume;
+    let volume = siteAudio.volume;
 
     const fade = setInterval(() => {
         volume -= 0.005;
@@ -1329,7 +1334,7 @@ function fadeMusicOut(){
             clearInterval(fade);
         }
 
-        mainVideo.volume = volume;
+        siteAudio.volume = volume;
     }, 120);
 }
 
@@ -1347,6 +1352,14 @@ btn.addEventListener("click", async () => {
     }
 
     overlay.style.display = "none";
+    siteAudio.muted = true;
+    siteAudio.volume = 0;
+    siteAudio.play().then(() => {
+        siteAudio.pause();
+        siteAudio.currentTime = 0;
+        siteAudio.muted = false;
+    }).catch(() => {});
+    
     keepIphoneVideosAlive();
 
     introWrapper.classList.add("introPlay");
@@ -1469,7 +1482,7 @@ btn.addEventListener("click", async () => {
                                 setInterval(() => {
                                     liquidLogo.innerHTML =
                                         dyingArabicHybridText("Clique Star Studded");
-                                    streetName }, 90);
+                                }, 90);
 
                                 finalButtons.classList.add("showButtons");
                             }
@@ -1487,10 +1500,7 @@ btn.addEventListener("click", async () => {
             bottomVideo.currentTime = 0;
 
             mainVideo.muted = false;
-            mainVideo.volume = 0;
-
-            topVideo.muted = true;
-            bottomVideo.muted = true;
+            mainVideo.volume = 1;
 
             mainVideo.play();
             topVideo.play();
@@ -1763,6 +1773,7 @@ submitApplication.onclick = async (e) => {
     alert(data.message);
 };
 
+// Bug Fix: Optimized video event listener handling to remove force-loads on minor stalls
 function keepIphoneVideosAlive(){
     const videos = [mainVideo, topVideo, bottomVideo];
 
@@ -1771,22 +1782,17 @@ function keepIphoneVideosAlive(){
         video.setAttribute("webkit-playsinline", "");
         video.preload = "auto";
 
-        video.addEventListener("pause", () => {
-            video.play().catch(() => {});
-        });
-
-        video.addEventListener("stalled", () => {
-            video.load();
+        video.addEventListener("ended", () => {
+            video.currentTime = 0;
             video.play().catch(() => {});
         });
 
         video.addEventListener("waiting", () => {
-            video.play().catch(() => {});
-        });
-
-        video.addEventListener("ended", () => {
-            video.currentTime = 0;
-            video.play().catch(() => {});
+            setTimeout(() => {
+                if(video.paused){
+                    video.play().catch(() => {});
+                }
+            }, 300);
         });
     });
 }

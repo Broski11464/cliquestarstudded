@@ -1,25 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
 <style>
-/* 1. Full-screen iPhone video fix applied here */
+/* Consolidated App Window Lockdown & Viewport-Fit Layer Rules */
 html,
 body{
-    margin:0;
-    padding:0;
+    position:fixed;
+    overflow:hidden;
     width:100%;
     height:100%;
-    overflow:hidden;
+    margin:0;
+    padding:0;
     background:black;
     font-family:Arial, sans-serif;
+    
+    touch-action:none;
+    overscroll-behavior:none;
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
+    user-select:none;
+    -webkit-user-select:none;
 }
 
-/* 1. Full-screen iPhone video fix applied here */
+/* Fixed overflow hazard by swapping out dynamic dynamic-height evaluations */
 .wrapper{
     width:100vw;
-    height:100dvh;
+    height:100%;
+    max-height:100vh;
     display:flex;
     flex-direction:column;
 }
@@ -138,7 +147,6 @@ video{
 }
 
 .introPlay #introDefinition{
-    /* Increased duration from 10s to 15s to last 5 seconds longer */
     animation:definitionShow 15s ease forwards;
     animation-delay:2.5s;
 }
@@ -240,6 +248,11 @@ video{
     text-align:center;
     opacity:0;
     width:90%;
+    pointer-events:none;
+}
+
+#middleInfo.contactsActive{
+    pointer-events:auto;
 }
 
 .contactTitle{
@@ -1092,8 +1105,15 @@ video{
 
 <div id="middleInfo">
     <div class="contactTitle">MY CONTACTS</div>
-    <div class="contactLine">karimaymandxb@gmail.com</div>
-    <div class="contactLine">+971508214338</div>
+
+    <div class="contactLine">
+        <a href="mailto:karimaymandxb@gmail.com">karimaymandxb@gmail.com</a>
+    </div>
+
+    <div class="contactLine">
+        <a href="tel:+971508214338">+971508214338</a>
+    </div>
+
     <div class="contactLine">
         <a href="https://instagram.com/herprettyeyebloodvessel" target="_blank">
             @herprettyeyebloodvessel
@@ -1216,6 +1236,25 @@ video{
 <div id="blackTransition"></div>
 
 <script>
+// Prevent rubber-band dragging gestures on main visual layers
+document.addEventListener("touchmove", function(e){
+    e.preventDefault();
+}, { passive:false });
+
+document.body.addEventListener("touchmove", function(e){
+    e.preventDefault();
+}, { passive:false });
+
+document.addEventListener("gesturestart", e => e.preventDefault());
+document.addEventListener("gesturechange", e => e.preventDefault());
+document.addEventListener("gestureend", e => e.preventDefault());
+
+document.addEventListener("touchmove", e => {
+    if(e.touches.length > 1){
+        e.preventDefault();
+    }
+}, { passive:false });
+
 document.addEventListener("submit", (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -1400,11 +1439,13 @@ btn.addEventListener("click", async () => {
 
         glitchTitle.style.opacity = "1";
         middleInfo.style.opacity = "1";
+        middleInfo.classList.add("contactsActive");
         quoteText.style.opacity = "1";
 
         setTimeout(() => {
             glitchTitle.classList.add("mainTextOut");
             middleInfo.classList.add("mainTextOut");
+            middleInfo.classList.remove("contactsActive");
             quoteText.classList.add("mainTextOut");
         }, 10000);
 

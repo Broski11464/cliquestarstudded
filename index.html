@@ -1124,19 +1124,19 @@ video{
 <div class="wrapper" id="videoWrapper">
 
 <div class="video-strip top">
-<video id="topVideo" muted loop playsinline preload="auto">
+<video id="topVideo" muted loop playsinline webkit-playsinline preload="auto">
 <source src="pc-video.mp4" type="video/mp4">
 </video>
 </div>
 
 <div class="video-strip middle">
-<video id="mainVideo" loop playsinline preload="auto">
+<video id="mainVideo" loop playsinline webkit-playsinline preload="auto">
 <source src="pc-video.mp4" type="video/mp4">
 </video>
 </div>
 
 <div class="video-strip bottom">
-<video id="bottomVideo" muted loop playsinline preload="auto">
+<video id="bottomVideo" muted loop playsinline webkit-playsinline preload="auto">
 <source src="pc-video.mp4" type="video/mp4">
 </video>
 </div>
@@ -1347,6 +1347,7 @@ btn.addEventListener("click", async () => {
     }
 
     overlay.style.display = "none";
+    keepIphoneVideosAlive();
 
     introWrapper.classList.add("introPlay");
     
@@ -1468,7 +1469,7 @@ btn.addEventListener("click", async () => {
                                 setInterval(() => {
                                     liquidLogo.innerHTML =
                                         dyingArabicHybridText("Clique Star Studded");
-                                streetName }, 90);
+                                    streetName }, 90);
 
                                 finalButtons.classList.add("showButtons");
                             }
@@ -1761,6 +1762,34 @@ submitApplication.onclick = async (e) => {
 
     alert(data.message);
 };
+
+function keepIphoneVideosAlive(){
+    const videos = [mainVideo, topVideo, bottomVideo];
+
+    videos.forEach(video => {
+        video.setAttribute("playsinline", "");
+        video.setAttribute("webkit-playsinline", "");
+        video.preload = "auto";
+
+        video.addEventListener("pause", () => {
+            video.play().catch(() => {});
+        });
+
+        video.addEventListener("stalled", () => {
+            video.load();
+            video.play().catch(() => {});
+        });
+
+        video.addEventListener("waiting", () => {
+            video.play().catch(() => {});
+        });
+
+        video.addEventListener("ended", () => {
+            video.currentTime = 0;
+            video.play().catch(() => {});
+        });
+    });
+}
 </script>
 
 </body>

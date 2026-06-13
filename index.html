@@ -4,18 +4,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
 <style>
-/* Consolidated App Window Lockdown & Viewport-Fit Layer Rules */
+/* 1. Full-screen iPhone video fix applied here */
+html,
+body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:black;
+    font-family:Arial, sans-serif;
+}
+
+/* 2. Strict mobile gesture layout lockdown injected after first html, body block */
 html,
 body{
     position:fixed;
     overflow:hidden;
     width:100%;
     height:100%;
-    margin:0;
-    padding:0;
-    background:black;
-    font-family:Arial, sans-serif;
-    
     touch-action:none;
     overscroll-behavior:none;
     -webkit-text-size-adjust:100%;
@@ -24,11 +31,10 @@ body{
     -webkit-user-select:none;
 }
 
-/* Fixed overflow hazard by swapping out dynamic dynamic-height evaluations */
+/* 1. Full-screen iPhone video fix applied here */
 .wrapper{
     width:100vw;
-    height:100%;
-    max-height:100vh;
+    height:100dvh;
     display:flex;
     flex-direction:column;
 }
@@ -147,6 +153,7 @@ video{
 }
 
 .introPlay #introDefinition{
+    /* Increased duration from 10s to 15s to last 5 seconds longer */
     animation:definitionShow 15s ease forwards;
     animation-delay:2.5s;
 }
@@ -248,6 +255,10 @@ video{
     text-align:center;
     opacity:0;
     width:90%;
+}
+
+/* 3. Injected pointer event selectors cleanly right under existing #middleInfo block */
+#middleInfo{
     pointer-events:none;
 }
 
@@ -1105,15 +1116,8 @@ video{
 
 <div id="middleInfo">
     <div class="contactTitle">MY CONTACTS</div>
-
-    <div class="contactLine">
-        <a href="mailto:karimaymandxb@gmail.com">karimaymandxb@gmail.com</a>
-    </div>
-
-    <div class="contactLine">
-        <a href="tel:+971508214338">+971508214338</a>
-    </div>
-
+    <div class="contactLine">karimaymandxb@gmail.com</div>
+    <div class="contactLine">+971508214338</div>
     <div class="contactLine">
         <a href="https://instagram.com/herprettyeyebloodvessel" target="_blank">
             @herprettyeyebloodvessel
@@ -1160,10 +1164,6 @@ video{
 <source src="pc-video.mp4" type="video/mp4">
 </video>
 </div>
-
-<audio id="siteAudio" preload="auto">
-    <source src="pc-video.mp4" type="audio/mp4">
-</audio>
 
 </div>
 
@@ -1236,23 +1236,13 @@ video{
 <div id="blackTransition"></div>
 
 <script>
-// Prevent rubber-band dragging gestures on main visual layers
-document.addEventListener("touchmove", function(e){
-    e.preventDefault();
-}, { passive:false });
-
-document.body.addEventListener("touchmove", function(e){
-    e.preventDefault();
-}, { passive:false });
-
+// 4. Added rigid iOS gesture/scroll lock interceptors right at the top of the <script>
 document.addEventListener("gesturestart", e => e.preventDefault());
 document.addEventListener("gesturechange", e => e.preventDefault());
 document.addEventListener("gestureend", e => e.preventDefault());
 
 document.addEventListener("touchmove", e => {
-    if(e.touches.length > 1){
-        e.preventDefault();
-    }
+    e.preventDefault();
 }, { passive:false });
 
 document.addEventListener("submit", (e) => {
@@ -1260,16 +1250,7 @@ document.addEventListener("submit", (e) => {
     e.stopPropagation();
 });
 
-document.addEventListener("click", (e) => {
-    if (
-        e.target.id === "signupBtn" ||
-        e.target.id === "loginBtn" ||
-        e.target.id === "submitApplication"
-    ) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-});
+
 
 /* CONFIGURATION AT THE TOP */
 const API_BASE = "https://clique-star-studded-api.onrender.com";
@@ -1280,7 +1261,6 @@ const overlay = document.getElementById("overlay");
 const topVideo = document.getElementById("topVideo");
 const mainVideo = document.getElementById("mainVideo");
 const bottomVideo = document.getElementById("bottomVideo");
-const siteAudio = document.getElementById("siteAudio");
 
 const introWrapper = document.getElementById("introWrapper");
 const glitchTitle = document.getElementById("glitchTitle");
@@ -1348,22 +1328,22 @@ function dyingArabicHybridText(text){
 
 const flashWords = document.getElementById("flashWords");
 
-/* Smoothly lower music functions assigned to independent audio node */
+/* 5. Smoothly lower music function added here */
 function fadeVolume(targetVolume){
     const fade = setInterval(() => {
-        if(siteAudio.volume > targetVolume){
-            siteAudio.volume -= 0.02;
+        if(mainVideo.volume > targetVolume){
+            mainVideo.volume -= 0.02;
         }
 
-        if(siteAudio.volume <= targetVolume){
-            siteAudio.volume = targetVolume;
+        if(mainVideo.volume <= targetVolume){
+            mainVideo.volume = targetVolume;
             clearInterval(fade);
         }
     }, 80);
 }
 
 function fadeMusicOut(){
-    let volume = siteAudio.volume;
+    let volume = mainVideo.volume;
 
     const fade = setInterval(() => {
         volume -= 0.005;
@@ -1373,7 +1353,7 @@ function fadeMusicOut(){
             clearInterval(fade);
         }
 
-        siteAudio.volume = volume;
+        mainVideo.volume = volume;
     }, 120);
 }
 
@@ -1391,29 +1371,18 @@ btn.addEventListener("click", async () => {
     }
 
     overlay.style.display = "none";
-    siteAudio.muted = true;
-    siteAudio.volume = 0;
-    siteAudio.play().then(() => {
-        siteAudio.pause();
-        siteAudio.currentTime = 0;
-        siteAudio.muted = false;
-    }).catch(() => {});
-    
     keepIphoneVideosAlive();
 
     introWrapper.classList.add("introPlay");
     
+    // Early unlock loop setup triggered immediately via explicit user-gesture interaction context
     mainVideo.muted = true;
     topVideo.muted = true;
     bottomVideo.muted = true;
 
-    mainVideo.play();
-    topVideo.play();
-    bottomVideo.play();
-
-    mainVideo.pause();
-    topVideo.pause();
-    bottomVideo.pause();
+    mainVideo.play().catch(() => {});
+    topVideo.play().catch(() => {});
+    bottomVideo.play().catch(() => {});
 
     mainVideo.currentTime = 0;
     topVideo.currentTime = 0;
@@ -1439,12 +1408,14 @@ btn.addEventListener("click", async () => {
 
         glitchTitle.style.opacity = "1";
         middleInfo.style.opacity = "1";
+        // 5. Appended class activator target down where contacts show natively
         middleInfo.classList.add("contactsActive");
         quoteText.style.opacity = "1";
 
         setTimeout(() => {
             glitchTitle.classList.add("mainTextOut");
             middleInfo.classList.add("mainTextOut");
+            // 6. Appended target layout removal logic where contacts fade out natively
             middleInfo.classList.remove("contactsActive");
             quoteText.classList.add("mainTextOut");
         }, 10000);
@@ -1523,7 +1494,7 @@ btn.addEventListener("click", async () => {
                                 setInterval(() => {
                                     liquidLogo.innerHTML =
                                         dyingArabicHybridText("Clique Star Studded");
-                                }, 90);
+                                    streetName }, 90);
 
                                 finalButtons.classList.add("showButtons");
                             }
@@ -1540,14 +1511,18 @@ btn.addEventListener("click", async () => {
             topVideo.currentTime = 0;
             bottomVideo.currentTime = 0;
 
-            mainVideo.muted = false;
-            mainVideo.volume = 1;
+            mainVideo.muted = true;
+            topVideo.muted = true;
+            bottomVideo.muted = true;
 
-            mainVideo.play();
-            topVideo.play();
-            bottomVideo.play();
+            mainVideo.play().catch(() => {});
+            topVideo.play().catch(() => {});
+            bottomVideo.play().catch(() => {});
 
             setTimeout(() => {
+
+                mainVideo.muted = false;
+                mainVideo.volume = 1;
 
                 createFlashWord();
 
@@ -1814,7 +1789,6 @@ submitApplication.onclick = async (e) => {
     alert(data.message);
 };
 
-// Bug Fix: Optimized video event listener handling to remove force-loads on minor stalls
 function keepIphoneVideosAlive(){
     const videos = [mainVideo, topVideo, bottomVideo];
 
@@ -1823,17 +1797,22 @@ function keepIphoneVideosAlive(){
         video.setAttribute("webkit-playsinline", "");
         video.preload = "auto";
 
-        video.addEventListener("ended", () => {
-            video.currentTime = 0;
+        video.addEventListener("pause", () => {
+            video.play().catch(() => {});
+        });
+
+        video.addEventListener("stalled", () => {
+            video.load();
             video.play().catch(() => {});
         });
 
         video.addEventListener("waiting", () => {
-            setTimeout(() => {
-                if(video.paused){
-                    video.play().catch(() => {});
-                }
-            }, 300);
+            video.play().catch(() => {});
+        });
+
+        video.addEventListener("ended", () => {
+            video.currentTime = 0;
+            video.play().catch(() => {});
         });
     });
 }
